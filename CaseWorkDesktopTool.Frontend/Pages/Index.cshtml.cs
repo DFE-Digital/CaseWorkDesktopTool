@@ -1,7 +1,7 @@
+using CaseWorkDesktopTool.Application.Common.Models;
 using CaseWorkDesktopTool.Domain.Entities.Academisation;
 using CaseWorkDesktopTool.Domain.Entities.SigChange;
 using CaseWorkDesktopTool.Domain.Interfaces.Repositories;
-using CaseWorkDesktopTool.Frontend.Models;
 using CaseWorkDesktopTool.Frontend.ViewModels;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 

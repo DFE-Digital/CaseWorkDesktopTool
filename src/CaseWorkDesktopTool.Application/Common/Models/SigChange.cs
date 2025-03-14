@@ -1,5 +1,6 @@
 ﻿
-namespace CaseWorkDesktopTool.Frontend.Models
+namespace CaseWorkDesktopTool.Application.Common.Models
+
 {
     public class SigChange
     {

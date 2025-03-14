@@ -1,4 +1,4 @@
-﻿using CaseWorkDesktopTool.Frontend.Models;
+﻿using CaseWorkDesktopTool.Application.Common.Models;
 
 namespace CaseWorkDesktopTool.Frontend.ViewModels
 {
