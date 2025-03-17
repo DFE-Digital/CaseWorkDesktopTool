@@ -1,0 +1,10 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+@foreach (var casework in Model.CaseWorks)
+{
+    <div>@casework.Type - @casework.SortDate</div>
+}
