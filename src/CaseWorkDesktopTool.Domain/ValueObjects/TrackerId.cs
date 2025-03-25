@@ -2,6 +2,5 @@
 
 namespace CaseWorkDesktopTool.Domain.ValueObjects
 {
-
-    public record class SigChangeTypeId(int Value) : IStronglyTypedId;
+    public record class TrackerId(int Value) : IStronglyTypedId;
 }

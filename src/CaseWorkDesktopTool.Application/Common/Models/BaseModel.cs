@@ -4,6 +4,14 @@
     {
         public CaseworkType Type { get; set; }
 
+        public required string SystemType { get; set; }
+
+        public string? Label { get; set; }
+
+        public string? Title { get; set; }
+
+        public int? TitleId { get; set; }
+
         public DateTime SortDate { get; set; }
 
         public override string ToString()

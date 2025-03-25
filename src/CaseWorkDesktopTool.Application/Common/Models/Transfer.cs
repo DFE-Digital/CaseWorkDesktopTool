@@ -1,18 +1,9 @@
-﻿using CaseWorkDesktopTool.Domain.enums;
-
-namespace CaseWorkDesktopTool.Application.Common.Models
-
+﻿namespace CaseWorkDesktopTool.Application.Common.Models
 {
     public class Transfer
     {
-        /// <summary>
-        /// ProjectId
-        /// </summary>
         public int Id { get; set; }
 
-        /// <summary>
-        /// ProjectUrn
-        /// </summary>
         public int? Urn { get; set; }
 
         public string? ProjectReference { get; set; }
@@ -29,16 +20,10 @@ namespace CaseWorkDesktopTool.Application.Common.Models
 
         public string? AssignedUserFullName { get; set; }
 
-        public ProjectStatus? Status { get; set; }
+        public string? Status { get; set; }
 
-        /// <summary>
-        /// TransferringAcademy.IncomingTrustUkprn
-        /// </summary>
         public string? IncomingTrustUkprn { get; set; }
 
-        /// <summary>
-        /// TransferringAcademy.IncomingTrustName
-        /// </summary>
         public string? IncomingTrustName { get; set; }
 
         public DateTime? CreatedOn { get; set; }

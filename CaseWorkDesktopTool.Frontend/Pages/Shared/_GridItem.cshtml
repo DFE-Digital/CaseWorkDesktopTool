@@ -1,0 +1,77 @@
+﻿@using CaseWorkDesktopTool.Application.Common.Models
+@using CaseWorkDesktopTool.Frontend.ViewModels
+
+@model BaseModel
+
+@{
+    var titleHref = "#";
+
+    switch (Model.Type)
+    {
+        case CaseworkType.SigChange:
+            titleHref = "https://apps.powerapps.com/play/e/default-fad277c9-c60a-4da1-b5f3-b3b8b34a82f9/a/dc208cce-df36-4fad-83a9-5aa15373449d?tenantId=fad277c9-c60a-4da1-b5f3-b3b8b34a82f9&hint=be9a08f1-66dd-48d2-8e4a-eff1ddefc5cf&sourcetime=1718979109588";
+            break;
+        case CaseworkType.Conversion:
+            titleHref = $"https://test.prepare-conversions.education.gov.uk/task-list/{Model.TitleId}?returnToFormAMatMenu=False";
+            break;
+        case CaseworkType.Transfer:
+            titleHref = $"https://test.prepare-conversions.education.gov.uk/transfers/project/{Model.TitleId}";
+            break;
+        default:
+            break;
+    }
+}
+
+<div class="mb-5 border border-1 border-secondary p-0" style="">
+    <div class="p-3 fw-bold fs-5">
+        <div class="p-2 d-inline-flex px-3 py-2 border border-1 bg-secondary text-white">@Model.SystemType</div>
+        <div class="p-2 d-inline-flex px-3 py-2 border border-1 bg-success text-dark bg-opacity-10">@Model.Label</div>
+        <div class="p-2 d-inline-flex px-3 py-2 border border-1 bg-transparent text-dark fw-normal">
+            <a target="_blank" href="@titleHref">@Model.Title</a>
+        </div>
+    </div>
+    <div class="p-3 border-top border-bottom border-secondary">
+        @switch (Model.Type)
+        {
+            case CaseworkType.SigChange:
+                <partial name="Shared/_SigChangeGridItem" model="@Model" />
+                break;
+            case CaseworkType.Conversion:
+                <partial name="Shared/_ConversionGridItem" model="@Model" />
+                break;
+            case CaseworkType.Transfer:
+                <partial name="Shared/_TransferGridItem" model="@Model" />
+                break;
+            default:
+                break;
+        }
+    </div>
+    <div class="p-3">
+        @switch (Model.Type)
+        {
+            case CaseworkType.SigChange:
+                <div class="fw-bold fs-5">
+                    <div class="p-2 d-inline-flex px-3 py-2 border border-1 bg-transparent text-dark fw-normal">
+                        <a target="_blank" href="https://educationgovuk.sharepoint.com/:w:/r/sites/lvewp00030/_layouts/15/Doc.aspx?sourcedoc=%7B5c117a81-2afb-40c7-b822-cd7ce711bb1c%7D&amp=&action=embedview&wdStartOn=47">Provision Change Guidance</a>
+                    </div>
+                </div>
+                break;
+            case CaseworkType.Conversion:
+                <partial name="Shared/_ConversionGridItemBottomLinks" model="@Model" />
+                break;
+            case CaseworkType.Transfer:
+                <div class="fw-bold fs-5">
+                    <div class="p-2 d-inline-flex px-3 py-2 border border-1 bg-transparent text-dark fw-normal">
+                        <a target="_blank" href="https://educationgovuk.sharepoint.com/:p:/r/sites/lvewp00030/Shared%20Documents/2-Intervention/5-Academy%20Transfer/Academy%20Transfer%20Framework.pptx?d=w4c9547340e554d36b0560c3256799405&csf=1&web=1&e=rySmYR&nav=eyJzSWQiOjI2NiwiY0lkIjozMTkyNTE5ODI4fQ">Academy transfer Framework</a>
+                    </div>
+                    <div class="p-2 d-inline-flex px-3 py-2 border border-1 bg-transparent text-dark fw-normal">
+                        <a target="_blank" href="https://app.powerbi.com/groups/me/reports/8ed3ef41-e67a-4408-b79a-80b66ee8b8f0/ReportSection3c95e742c03ea595e378?ctid=fad277c9-c60a-4da1-b5f3-b3b8b34a82f9&experience=power-bi">Trust Mapping Tool</a>
+                    </div>
+                </div>
+
+                break;
+            default:
+                break;
+        }
+    </div>
+</div>

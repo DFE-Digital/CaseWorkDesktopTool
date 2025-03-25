@@ -32,25 +32,26 @@ public class IndexModel : PageModel
             SchoolName = project.SchoolName,
             LocalAuthority = project.LocalAuthority,
             Region = project.Region,
-            AcademyTypeAndRoute = project.AcademyTypeAndRoute,
+            Type = project.AcademyTypeAndRoute == "Sponsored" ? "Sponsored conversion" : "Voluntary conversion",
             NameOfTrust = project.NameOfTrust,
             AssignedUserEmailAddress = project.AssignedUserEmailAddress,
             AssignedUserFullName = project.AssignedUserFullName,
             ProjectStatus = project.ProjectStatus,
             TrustReferenceNumber = project.TrustReferenceNumber,
-            CreatedOn = project.CreatedOn
+            CreatedOn = project.CreatedOn,
+            GiasGroupUid = project.GiasGroupUid,
+            GiasGroupName = project.GiasGroupName,
+            Decision = project.Decision,
+            ConversionTransferDate = project.AdvisoryBoardDecisionDate,
         };
-
-        if (project.ConversionAdvisoryBoardDecision is not null)
-        {
-            conversion.Decision = project.ConversionAdvisoryBoardDecision.Decision;
-            conversion.ConversionTransferDate = project.ConversionAdvisoryBoardDecision.AdvisoryBoardDecisionDate;
-        }
-
 
         CaseworkViewModel<Conversion> model = new CaseworkViewModel<Conversion>
         {
             Type = CaseworkType.Conversion,
+            SystemType = "Prepare",
+            Label = "Conversion",
+            Title = project.SchoolName,
+            TitleId = project.Id.Value,
             SortDate = project.CreatedOn!.Value,
             Data = conversion
         };
@@ -84,6 +85,10 @@ public class IndexModel : PageModel
         CaseworkViewModel<Transfer> model = new CaseworkViewModel<Transfer>
         {
             Type = CaseworkType.Transfer,
+            SystemType = "Prepare",
+            Label = "Transfer",
+            Title = project.TransferringAcademy?.IncomingTrustName,
+            TitleId = project.Urn,
             SortDate = project.CreatedOn!.Value,
             Data = transfer
         };
@@ -91,37 +96,32 @@ public class IndexModel : PageModel
         return model;
     }
 
-    private CaseworkViewModel<SigChange> MapSigChanges(SigChangeTracker sigChange, CoreChain? chain)
+    private CaseworkViewModel<SigChange> MapTracker(Tracker tracker)
     {
         var model = new SigChange
         {
-            Urn = sigChange.Urn,
-            ApplicationType = sigChange.ApplicationType,
-            DecisionDate = sigChange.DecisionDate,
-            DeliveryLead = sigChange.DeliveryLead,
-            ChangeCreationDate = sigChange.ChangeCreationDate,
-            AllActionsCompleted = sigChange.AllActionsCompleted,
-            Withdrawn = sigChange.Withdrawn
+            Urn = tracker.Urn,
+            TypeOfSigChange = tracker.TypeOfSigChange,
+            Username = tracker.Username,
+            ApplicationType = tracker.ApplicationType,
+            DecisionDate = tracker.DecisionDate,
+            DeliveryLead = tracker.DeliveryLead,
+            ChangeCreationDate = tracker.ChangeCreationDate,
+            AllActionsCompleted = tracker.AllActionsCompleted,
+            Withdrawn = tracker.Withdrawn,
+            LocalAuthority = tracker.LocalAuthority,
+            Region = tracker.Region,
+            TrustName = tracker.TrustName,
+            AcademyName = tracker.AcademyName,
+            DateStamp = tracker.DateStamp
         };
-
-        if (sigChange.SigChangeType != null)
-        {
-            model.TypeOfSigChange = sigChange.SigChangeType!.TypeOfSigChange;
-            model.Username = sigChange.SigChangeType!.Username;
-        }
-
-        if (chain != null)
-        {
-            model.LocalAuthority = chain.LocalAuthority;
-            model.Region = chain.Region;
-            model.TrustName = chain.TrustName;
-            model.AcademyName = chain.AcademyName;
-            model.DateStamp = chain.DateStamp;
-        }
 
         CaseworkViewModel<SigChange> result = new CaseworkViewModel<SigChange>
         {
             Type = CaseworkType.SigChange,
+            SystemType = "Significant Change",
+            Label = tracker.TypeOfSigChange,
+            Title = tracker.AcademyName,
             SortDate = model.ChangeCreationDate!.Value,
             Data = model
         };
@@ -131,24 +131,21 @@ public class IndexModel : PageModel
 
     public async Task OnGetAsync()
     {
-        //var test = await _academisationRepository.GetConversionProjectByIdAsync(22073, CancellationToken.None);
-
         List<BaseModel> records = new List<BaseModel>();
 
-        var email = User.Identity?.Name!;
+        var identity = User.Identity;
+        var username = "Ben Memmott"; // Asim Rasib, Richika.DOGRA@education.gov.uk, ben.memmott@education.gov.uk
 
-        // Sig Changes
-        var sigChanges = await _sigChangeRepository.GetTrackersByUsernameAsync("Asim Rasib", CancellationToken.None);
-
-        foreach (var sigChange in sigChanges)
+        var trackers = await _sigChangeRepository.GetTrackersAsync(username, CancellationToken.None);
+        foreach (Tracker tracker in trackers)
         {
-            var chain = await _sigChangeRepository.GetCoreChainByUrnAsync(sigChange.Urn!.Value, CancellationToken.None);
-
-            records.Add(MapSigChanges(sigChange, chain));
+            records.Add(MapTracker(tracker));
         }
 
+        string email = "Ben.MEMMOTT@education.gov.uk";
+
         // Conversion
-        var conversions = await _academisationRepository.GetConversionProjectsByAssignedUserEmailAddressAsync("Richika.DOGRA@education.gov.uk", CancellationToken.None);
+        var conversions = await _academisationRepository.GetConversionProjectsByAssignedUserEmailAddressAsync(email, CancellationToken.None);
 
         foreach (Project project in conversions)
         {
@@ -156,7 +153,7 @@ public class IndexModel : PageModel
         }
 
         // Transfers
-        var transfers = await _academisationRepository.GetTransferProjectsByAssignedUserEmailAddressAsync("Richika.DOGRA@education.gov.uk", CancellationToken.None);
+        var transfers = await _academisationRepository.GetTransferProjectsByAssignedUserEmailAddressAsync(email, CancellationToken.None);
 
         foreach (TransferProject project in transfers)
         {
@@ -164,7 +161,5 @@ public class IndexModel : PageModel
         }
 
         CaseWorks = records.OrderByDescending(x => x.SortDate).ToList();
-
-        //var record = list[0] as CaseworkViewModel<Conversion>;
     }
 }

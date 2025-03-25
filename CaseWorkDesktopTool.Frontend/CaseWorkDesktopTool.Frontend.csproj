@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="DfE.CoreLibs.Security" Version="1.0.6" />
+    <PackageReference Include="GovUk.Frontend.AspNetCore" Version="2.8.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
     <PackageReference Include="Microsoft.Identity.Web.UI" Version="3.8.0" />
   </ItemGroup>

@@ -1,5 +1,4 @@
 ﻿using CaseWorkDesktopTool.Domain.Common;
-using CaseWorkDesktopTool.Domain.enums;
 using CaseWorkDesktopTool.Domain.ValueObjects;
 
 namespace CaseWorkDesktopTool.Domain.Entities.Academisation
@@ -24,7 +23,7 @@ namespace CaseWorkDesktopTool.Domain.Entities.Academisation
 
         public string? AssignedUserFullName { get; private set; }
 
-        public ProjectStatus? Status { get; private set; }
+        public string? Status { get; private set; }
 
         public DateTime? CreatedOn { get; private set; }
 
