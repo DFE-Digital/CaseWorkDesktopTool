@@ -1,0 +1,42 @@
+﻿@using CaseWorkDesktopTool.Frontend.ViewModels;
+@using CaseWorkDesktopTool.Application.Common.Models;
+@using System.Globalization
+
+@model CaseworkViewModel<Transfer>
+
+<form>
+    <div class="row mb-3">
+        <div class="col-sm-2 fw-bold">UKPRN</div>
+        <div class="col-sm-10">@Model.Data.IncomingTrustUkprn</div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-sm-2 fw-bold">Project type</div>
+        <div class="col-sm-10">Transfer</div>
+    </div>
+
+    <div class="row mb-3">
+        @{
+            DateTime parsedDate;
+            if (DateTime.TryParse(Model.Data.TargetDateForTransfer?.ToString(), out parsedDate))
+            {
+                <div class="col-sm-2 fw-bold">Transfer date</div>
+                <div class="col-sm-10">@parsedDate.ToString("MM/dd/yyyy")</div>
+            }
+            else
+            {
+                <div class="d-flex align-items-center">
+                    <div class="col-sm-2 fw-bold">Transfer date</div>
+                    <div class="col-sm-10">
+                        <div class="d-inline-flex p-1 border border-1 bg-success text-dark bg-opacity-10">Empty</div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-sm-2 fw-bold">Outgoing Trust</div>
+        <div class="col-sm-10">@Model.Data.OutgoingTrustName</div>
+    </div>
+</form>

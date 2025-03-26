@@ -1,5 +1,4 @@
 ﻿using CaseWorkDesktopTool.Domain.Entities.Academisation;
-using CaseWorkDesktopTool.Domain.enums;
 using CaseWorkDesktopTool.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -8,7 +7,7 @@ namespace CaseWorkDesktopTool.Infrastructure.Database
 {
     public class AcademisationContext : DbContext
     {
-        const string _schema = "academisation";
+        const string _academisationSchema = "academisation";
 
         public AcademisationContext(DbContextOptions<AcademisationContext> options)
         : base(options)
@@ -17,8 +16,6 @@ namespace CaseWorkDesktopTool.Infrastructure.Database
 
         public DbSet<Project> Projects { get; set; } = null!;
 
-        public DbSet<ConversionAdvisoryBoardDecision> ConversionAdvisoryBoardDecisions { get; set; } = null!;
-
         public DbSet<TransferProject> TransferProjects { get; set; } = null!;
 
         public DbSet<TransferringAcademy> TransferringAcademies { get; set; } = null!;
@@ -26,7 +23,6 @@ namespace CaseWorkDesktopTool.Infrastructure.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Project>(ConfigureProject);
-            modelBuilder.Entity<ConversionAdvisoryBoardDecision>(ConfigureConversionAdvisoryBoardDecision);
             modelBuilder.Entity<TransferProject>(ConfigureTransferProject);
             modelBuilder.Entity<TransferringAcademy>(ConfigureTransferringAcademy);
 
@@ -35,7 +31,7 @@ namespace CaseWorkDesktopTool.Infrastructure.Database
 
         private void ConfigureProject(EntityTypeBuilder<Project> projectConfiguration)
         {
-            projectConfiguration.ToTable("Project", _schema);
+            projectConfiguration.ToTable("Project", _academisationSchema);
 
             projectConfiguration.HasKey(s => s.Id);
             projectConfiguration.Property(e => e.Id)
@@ -46,56 +42,25 @@ namespace CaseWorkDesktopTool.Infrastructure.Database
 
             projectConfiguration.Property(e => e.Urn).HasColumnName("Urn").IsRequired();
             projectConfiguration.Property(e => e.ApplicationReferenceNumber).HasColumnName("ApplicationReferenceNumber");
-            projectConfiguration.Property(e => e.SchoolName).HasColumnName("SchoolName").IsRequired();
-            projectConfiguration.Property(e => e.LocalAuthority).HasColumnName("LocalAuthority").IsRequired();
-            projectConfiguration.Property(e => e.Region).HasColumnName("Region").IsRequired();
-            projectConfiguration.Property(e => e.AcademyTypeAndRoute).HasColumnName("AcademyTypeAndRoute").IsRequired();
+            projectConfiguration.Property(e => e.SchoolName).HasColumnName("SchoolName");
+            projectConfiguration.Property(e => e.LocalAuthority).HasColumnName("LocalAuthority");
+            projectConfiguration.Property(e => e.Region).HasColumnName("Region");
+            projectConfiguration.Property(e => e.AcademyTypeAndRoute).HasColumnName("AcademyTypeAndRoute");
             projectConfiguration.Property(e => e.NameOfTrust).HasColumnName("NameOfTrust");
             projectConfiguration.Property(e => e.AssignedUserEmailAddress).HasColumnName("AssignedUserEmailAddress");
             projectConfiguration.Property(e => e.AssignedUserFullName).HasColumnName("AssignedUserFullName");
-
-            projectConfiguration
-                .Property(e => e.ProjectStatus)
-                .HasColumnName("ProjectStatus")
-                .HasConversion(
-                    v => v.ToString(),
-                    v => (ProjectStatus)Enum.Parse(typeof(ProjectStatus), v)
-                );
-
-
+            projectConfiguration.Property(e => e.ProjectStatus).HasColumnName("ProjectStatus");
             projectConfiguration.Property(e => e.TrustReferenceNumber).HasColumnName("TrustReferenceNumber");
             projectConfiguration.Property(e => e.CreatedOn).HasColumnName("CreatedOn");
-
-            projectConfiguration
-                .HasOne(e => e.ConversionAdvisoryBoardDecision)
-                .WithOne(e => e.Project)
-                .HasForeignKey<ConversionAdvisoryBoardDecision>(e => e.ConversionProjectId)
-                .IsRequired(false);
-        }
-
-        private void ConfigureConversionAdvisoryBoardDecision(EntityTypeBuilder<ConversionAdvisoryBoardDecision> conversionAdvisoryBoardDecisionConfiguration)
-        {
-            conversionAdvisoryBoardDecisionConfiguration.ToTable("ConversionAdvisoryBoardDecision", _schema);
-
-            conversionAdvisoryBoardDecisionConfiguration.HasKey(s => s.Id);
-            conversionAdvisoryBoardDecisionConfiguration.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasConversion(
-                    v => v!.Value,
-                    v => new ConversionAdvisoryBoardDecisionId(v));
-
-            conversionAdvisoryBoardDecisionConfiguration.Property(e => e.ConversionProjectId)
-                .HasConversion(
-                    v => v.Value,
-                    v => new ProjectId(v));
-
-            conversionAdvisoryBoardDecisionConfiguration.Property(e => e.Decision).HasColumnName("Decision");
-            conversionAdvisoryBoardDecisionConfiguration.Property(e => e.AdvisoryBoardDecisionDate).HasColumnName("AdvisoryBoardDecisionDate");
+            projectConfiguration.Property(e => e.GiasGroupUid).HasColumnName("Group UID");
+            projectConfiguration.Property(e => e.GiasGroupName).HasColumnName("Group Name");
+            projectConfiguration.Property(e => e.Decision).HasColumnName("Decision");
+            projectConfiguration.Property(e => e.AdvisoryBoardDecisionDate).HasColumnName("AdvisoryBoardDecisionDate");
         }
 
         private void ConfigureTransferProject(EntityTypeBuilder<TransferProject> transferProjectConfiguration)
         {
-            transferProjectConfiguration.ToTable("TransferProject", _schema);
+            transferProjectConfiguration.ToTable("TransferProject", _academisationSchema);
 
             transferProjectConfiguration.HasKey(s => s.Id);
             transferProjectConfiguration.Property(e => e.Id)
@@ -112,15 +77,6 @@ namespace CaseWorkDesktopTool.Infrastructure.Database
             transferProjectConfiguration.Property(e => e.TargetDateForTransfer).HasColumnName("TargetDateForTransfer");
             transferProjectConfiguration.Property(e => e.AssignedUserEmailAddress).HasColumnName("AssignedUserEmailAddress");
             transferProjectConfiguration.Property(e => e.AssignedUserFullName).HasColumnName("AssignedUserFullName");
-
-            transferProjectConfiguration
-                .Property(e => e.Status)
-                .HasColumnName("Status")
-                .HasConversion(
-                    v => v.ToString(),
-                    v => (ProjectStatus)Enum.Parse(typeof(ProjectStatus), v)
-                );
-
             transferProjectConfiguration.Property(e => e.CreatedOn).HasColumnName("CreatedOn");
 
             transferProjectConfiguration
@@ -132,7 +88,7 @@ namespace CaseWorkDesktopTool.Infrastructure.Database
 
         private void ConfigureTransferringAcademy(EntityTypeBuilder<TransferringAcademy> transferringAcademyConfiguration)
         {
-            transferringAcademyConfiguration.ToTable("TransferringAcademy", _schema);
+            transferringAcademyConfiguration.ToTable("TransferringAcademy", _academisationSchema);
 
             transferringAcademyConfiguration.HasKey(s => s.Id);
             transferringAcademyConfiguration.Property(e => e.Id)

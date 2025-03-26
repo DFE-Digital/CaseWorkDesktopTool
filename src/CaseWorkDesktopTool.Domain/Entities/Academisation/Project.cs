@@ -1,5 +1,4 @@
 ﻿using CaseWorkDesktopTool.Domain.Common;
-using CaseWorkDesktopTool.Domain.enums;
 using CaseWorkDesktopTool.Domain.ValueObjects;
 
 namespace CaseWorkDesktopTool.Domain.Entities.Academisation
@@ -26,12 +25,18 @@ namespace CaseWorkDesktopTool.Domain.Entities.Academisation
 
         public string? AssignedUserFullName { get; private set; }
 
-        public ProjectStatus? ProjectStatus { get; private set; }
+        public string? ProjectStatus { get; private set; }
 
         public string? TrustReferenceNumber { get; private set; }
 
         public DateTime? CreatedOn { get; private set; }
 
-        public ConversionAdvisoryBoardDecision? ConversionAdvisoryBoardDecision { get; private set; }
+        public string? GiasGroupUid { get; private set; }
+
+        public string? GiasGroupName { get; private set; }
+
+        public string? Decision { get; private set; }
+
+        public DateTime? AdvisoryBoardDecisionDate { get; private set; }
     }
 }

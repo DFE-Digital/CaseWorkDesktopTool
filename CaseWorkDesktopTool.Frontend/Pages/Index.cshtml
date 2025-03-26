@@ -1,10 +1,15 @@
 ﻿@page
+@using CaseWorkDesktopTool.Application.Common.Models
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
 }
 
-@foreach (var casework in Model.CaseWorks)
-{
-    <div>@casework.Type - @casework.SortDate</div>
-}
+<div class="container">
+    <div class="row">
+        @foreach (var casework in Model.CaseWorks)
+        {
+            <partial name="Shared/_GridItem" model="@casework" />
+        }
+    </div>
+</div>

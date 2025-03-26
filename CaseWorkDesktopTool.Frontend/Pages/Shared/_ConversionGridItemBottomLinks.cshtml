@@ -1,0 +1,16 @@
+﻿@using CaseWorkDesktopTool.Frontend.ViewModels;
+@using CaseWorkDesktopTool.Application.Common.Models;
+
+@model CaseworkViewModel<Conversion>
+
+<div class="fw-bold fs-5">
+    <div class="p-1 d-inline-flex px-2 py-1 border border-1 bg-transparent text-dark fw-normal">
+        <a target="_blank" href="https://educationgovuk.sharepoint.com/sites/lvewp00030/SitePages/7-Monitoring%20&%20Decision%20Making/1-Advisory%20Board/Advisory%20Board.aspx">Advisory Board Guidance</a>
+    </div>
+    <div class="p-1 d-inline-flex px-2 py-1 border border-1 bg-transparent text-dark fw-normal">
+        <a target="_blank" href="https://test.find-information-academies-trusts.education.gov.uk/trusts/overview/trust-details?uid=@Model.Data.GiasGroupUid">FIAT Trust Page</a>
+    </div>
+    <div class="p-1 d-inline-flex px-2 py-1 border border-1 bg-transparent text-dark fw-normal">
+        <a target="_blank" href="https://educationgovuk.sharepoint.com/_layouts/15/sharepoint.aspx?oobRefiners=%7b%22FileType%22:%5b%22other%22%5d%7d&q=@Model.Data.TrustReferenceNumber&v=%2fsearch">Trust Folder (Sharepoint search)</a>
+    </div>
+</div>
